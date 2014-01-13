@@ -21,11 +21,11 @@ function edge_betweenness = get_edge_betweenness(A)
         edge_list   = edge_betweenness;
 
         % Abstract info about vertice into one structure.
-        vertex_info = struct(
-            "visited", false(1, vertex_num),
-            "in_queue", false(1, vertex_num),
-            "distance", inf(1, vertex_num),
-            "weight", zeros(1, vertex_num)
+        vertex_info = struct( ...
+            'visited', false(1, vertex_num), ...
+            'in_queue', false(1, vertex_num), ...
+            'distance', inf(1, vertex_num), ...
+            'weight', zeros(1, vertex_num) ...
             );
 
         % Initialize source node distance and weight.
@@ -48,7 +48,7 @@ function edge_betweenness = get_edge_betweenness(A)
             % For vertex in neighbors, add to queue if unvisited and not in
             % queue.
             for neighbor = neighbors
-                if not(vertex_info.in_queue(neighbor) |
+                if not(vertex_info.in_queue(neighbor) | ...
                 vertex_info.visited(neighbor))
                     queue                           = [queue neighbor];
                     vertex_info.in_queue(neighbor)  = true;
@@ -113,7 +113,7 @@ function edge_betweenness = get_edge_betweenness(A)
                     i_list = find(edge_list(:, 1) == vertex);
                     j_list = find(edge_list(:, 2) == neighbor);
                     e = intersect(i_list, j_list);
-                    score += edge_list(e, 3);
+                    score = score + edge_list(e, 3);
                 end
 
                 %% For each closer neighbor, the edge betweenness between it and the
@@ -138,9 +138,9 @@ function edge_betweenness = get_edge_betweenness(A)
             end
         end
 
-        edge_betweenness(:, 3) += edge_list(:, 3);
+        edge_betweenness(:, 3) = edge_betweenness(:, 3) + edge_list(:, 3);
     end
 
     % Normalize the final edge betweenness.
-    edge_betweenness(:, 3) /= vertex_num * (vertex_num - 1);
+    edge_betweenness(:, 3) = edge_betweenness(:, 3) / vertex_num * (vertex_num - 1);
 end

@@ -8,8 +8,8 @@ function write_clustering_results_to_file(clusters, vertex_num, filename)
         end
     end
 
-    fid = fopen(filename, "w");
-    fprintf(fid, "%i\n", clustering_result);
+    fid = fopen(filename, 'w');
+    fprintf(fid, '%i\n', clustering_result);
     fclose(fid);
 
 end

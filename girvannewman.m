@@ -9,7 +9,7 @@
 function clusters = girvannewman(adj, k)
     % Initialization.
     vertex_num          = size(adj, 1);
-    clusters_verbose    = struct("vertice", 0, "vertice_num", vertex_num);
+    clusters_verbose    = struct('vertice', 0, 'vertice_num', vertex_num);
     clusters_verbose.vertice = {1:vertex_num};
     current_comp_num    = 1;
     subgraph_adj        = adj;
@@ -30,11 +30,24 @@ function clusters = girvannewman(adj, k)
             j = edge_betweenness(e, 2);
             subgraph_adj(i, j) = 0;
             subgraph_adj(j, i) = 0;
+            % Update the original adjacenct matrix as well.
+            adj( ...
+                clusters_verbose.vertice{current_comp_num}(i), ...
+                clusters_verbose.vertice{current_comp_num}(j) ...
+                ) = 0;
+            adj( ...
+                clusters_verbose.vertice{current_comp_num}(j), ...
+                clusters_verbose.vertice{current_comp_num}(i) ...
+                ) = 0;
         end
 
         % Add new components of the subgraph into cluster_verbose.
         conn_comps                  = find_connected_component(subgraph_adj);
-        clusters_verbose.vertice    = {clusters_verbose.vertice{:}, conn_comps{:}};
+        % Change the vertex number back to real vertex number.
+        for i = 1:length(conn_comps)
+            clusters_verbose.vertice = {clusters_verbose.vertice{:}, ...
+                clusters_verbose.vertice{current_comp_num}(conn_comps{i})};
+        end
         % Delete current components.
         clusters_verbose.vertice(current_comp_num) = [];
 
@@ -46,8 +59,8 @@ function clusters = girvannewman(adj, k)
             clusters_verbose.vertice_num(i) = length(clusters_verbose.vertice{i});
         end
         [discarded, current_comp_num]   = max(clusters_verbose.vertice_num);
-        subgraph_adj                    = adj(
-                                clusters_verbose.vertice{current_comp_num},
+        subgraph_adj                    = adj( ...
+                                clusters_verbose.vertice{current_comp_num}, ...
                                 clusters_verbose.vertice{current_comp_num});
     end
 
