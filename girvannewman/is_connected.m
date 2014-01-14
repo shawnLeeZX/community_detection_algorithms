@@ -1,6 +1,7 @@
 function is_connected = is_connected(adj)
     vertex_num  = size(adj, 1);
     x           = [1; zeros(vertex_num - 1, 1)];
+    adj         = double(adj);
 
     % Starting from the first vertex, see whether it can traverse the entire
     % graph or not.
